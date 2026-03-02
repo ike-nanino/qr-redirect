@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>QR Redirect</title>
+
+<script>
+
+function redirectUser() {
+
+const now = new Date()
+
+const schedule = [
+
+{
+date: "2026-03-02",
+hour: 9,
+minute: 0,
+link: "https://www.flightaware.com/live/flight/EDV5210/history/20260303/1315Z/KHSV/KLGA"
+},
+
+{
+date: "2026-03-02",
+hour: 19,
+minute: 0,
+link: "https://www.flightaware.com/live/flight/DAL156/history/20260303/2135Z/KJFK/DGAA"
+},
+
+// {
+// date: "2026-03-06",
+// hour: 12,
+// minute: 0,
+// link: "https://example.com/day2-event"
+// }
+
+]
+
+
+let selectedLink = null
+
+
+for (let i = schedule.length - 1; i >= 0; i--) {
+
+const event = new Date(
+schedule[i].date + "T" +
+String(schedule[i].hour).padStart(2,'0') + ":" +
+String(schedule[i].minute).padStart(2,'0') + ":00"
+)
+
+if (now >= event) {
+
+selectedLink = schedule[i].link
+break
+
+}
+
+}
+
+
+if (selectedLink) {
+
+window.location.href = selectedLink
+
+} else {
+
+document.body.innerHTML = `
+<h2>This QR code is not active yet.</h2>
+<p>Please scan again later.</p>
+`
+
+}
+
+}
+
+window.onload = redirectUser
+
+</script>
+
+</head>
+
+<body>
+
+<h2>Checking schedule...</h2>
+
+</body>
+</html>
