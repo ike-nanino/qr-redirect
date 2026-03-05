@@ -6,13 +6,11 @@
 
 <script>
 
-// Converts a date + time in a specific timezone into a UTC timestamp
+// Convert a date + time in a timezone into UTC timestamp
 function convertToUTC(date, hour, minute, timeZone) {
 
-  // Step 1: Create a Date object in UTC first
   const utcDate = new Date(date + "T00:00:00Z");
 
-  // Step 2: Format that date as if it exists inside the chosen timezone
   const formatter = new Intl.DateTimeFormat("en-US", {
     timeZone: timeZone,
     year: "numeric",
@@ -27,36 +25,38 @@ function convertToUTC(date, hour, minute, timeZone) {
   const month = parts.find(p => p.type === "month").value;
   const day = parts.find(p => p.type === "day").value;
 
-  // Step 3: Build full date-time string
   const finalDate = new Date(
     `${year}-${month}-${day}T${String(hour).padStart(2,'0')}:${String(minute).padStart(2,'0')}:00`
   );
 
-  // Step 4: Return UTC timestamp
   return finalDate.getTime();
 }
 
 
 function redirectUser() {
 
-  // Current real-world time in UTC (same everywhere on earth)
   const nowUTC = Date.now();
 
   const schedule = [
+
+    // First flight link becomes active at 12:00 PM CST
     {
-      date: "2026-03-02",
+      date: "2026-03-04",
       hour: 12,
-      minute: 10,
-      timezone: "America/Chicago", // GLOBAL timezone with DST support
-      link: "https://www.flightaware.com/live/flight/EDV5210/history/20260303/1315Z/KHSV/KLGA"
+      minute: 0,
+      timezone: "America/Chicago",
+      link: "https://www.flightaware.com/live/flight/UCA4340/history/20260306/1920Z/KHSV/KIAD"
     },
+
+    // Second flight link becomes active after first flight ends (4:13 PM EST)
     {
-      date: "2026-03-03",
+      date: "2026-03-06",
       hour: 16,
-      minute: 25,
+      minute: 14,
       timezone: "America/New_York",
-      link: "https://www.flightaware.com/live/flight/DAL156/history/20260303/2135Z/KJFK/DGAA"
+      link: "https://www.flightaware.com/live/flight/UAL996/history/20260306/2350Z/KIAD/DGAA"
     }
+
   ];
 
   let selectedLink = null;
@@ -77,13 +77,18 @@ function redirectUser() {
   }
 
   if (selectedLink) {
+
     window.location.href = selectedLink;
+
   } else {
+
     document.body.innerHTML = `
       <h2>This QR code is not active yet.</h2>
       <p>Please scan again later.</p>
     `;
+
   }
+
 }
 
 window.onload = redirectUser;
@@ -92,6 +97,8 @@ window.onload = redirectUser;
 </head>
 
 <body>
+
 <h2>Checking schedule...</h2>
+
 </body>
 </html>
